@@ -3,5 +3,5 @@ from pathlib import Path
 import os
 
 load_dotenv()  # loads variables from .env into os.environ
-api = os.environ["gemini_API"]
+api = "AIzaSyBvBnlgt1z0JUG7mW-qCOwT4MMOaUSjrao"
 

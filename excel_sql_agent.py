@@ -6,21 +6,23 @@ import sqlite3
 import os
 
 class ExcelSQLAgent:
-    def __init__(self, excel_path, gemini_api_key):
-        self.excel_path = excel_path
+    def __init__(self, df, gemini_api_key):
+        self.df = df
         self.llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=gemini_api_key, temperature=0)
         self.headers = []
         self.db_path = "temp_excel.db"
         
     def extract_headers(self):
         """Extract headers from Excel sheet"""
-        df = pd.read_excel(self.excel_path)
+        # df = pd.read_excel(self.excel_path)
+        df=self.df
         self.headers = df.columns.tolist()
         return self.headers
     
     def create_temp_db(self):
         """Create temporary SQLite database from Excel"""
-        df = pd.read_excel(self.excel_path)
+        # df = pd.read_excel(self.excel_path)
+        df=self.df
         conn = sqlite3.connect(self.db_path)
         df.to_sql('data_table', conn, if_exists='replace', index=False)
         conn.close()
@@ -46,7 +48,8 @@ You MUST double check your query before executing it. If you get an error while 
 
 DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.
 
-If the question does not seem related to the database, just return "I don't know" as the answer."""
+If the question does not seem related to the database, just return "I don't know" as the answer.
+Note: Generate the output in tabular html format for the feasible data  generated in the response"""
         
         self.agent = create_sql_agent(
             llm=self.llm,
@@ -80,6 +83,7 @@ If the question does not seem related to the database, just return "I don't know
                 pass
 
 # Usage example
-def process_excel_query(excel_file_path, user_query, gemini_api_key):
-    agent = ExcelSQLAgent(excel_file_path, gemini_api_key)
+# def process_excel_query(excel_file_path, user_query, gemini_api_key):
+def process_excel_query(df, user_query, gemini_api_key):
+    agent = ExcelSQLAgent(df, gemini_api_key)
     return agent.query(user_query)

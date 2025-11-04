@@ -12,7 +12,7 @@ if __name__ == "__main__":
     
     # Natural language queries
     queries = [
-        "List all the employees who are under Platform, App & Infra TSC.Note: Don't use any limit ",
+        "List all the employees who are under Platform, App & Infra TSC.Note: Don't use any limit , Do generate the data in Json Format ",
     ]
     
     for query in queries:

@@ -99,13 +99,14 @@ def is_follow_up_query(query, session_id="default"):
         print(f"🔍 Debug - Clear new action detected, forcing NEW query: {has_clear_new_action}")
         return False
     
-    # Step 5: Check if the query is asking for specific data extraction from previous response
+    # Step 5: Check if the query mentions someone/something from the previous response
     context_match = False
     if history:
         try:
             last_response = history[-1]['response']
             # Ensure the response is a string
             if isinstance(last_response, dict):
+                # If it's a dict, try to get the text content
                 last_response = str(last_response.get('output', '') or last_response.get('text', '') or str(last_response))
             elif not isinstance(last_response, str):
                 last_response = str(last_response)
@@ -113,29 +114,16 @@ def is_follow_up_query(query, session_id="default"):
             last_response_lower = last_response.lower()
             query_words = query.split()
             
-            # Look for proper names (capitalized words) in the query - but exclude action verbs and common words
-            action_verbs = ['Generate', 'Create', 'Show', 'Get', 'Find', 'List', 'Display', 'Retrieve', 'Give', 'Provide', 'Make', 'Build', 'Prepare', 'Extract', 'Analyze', 'Report', 'Export', 'Import', 'Update', 'Delete', 'Add', 'Remove']
-            common_words = ['Report', 'Data', 'Information', 'Details', 'Summary', 'Analysis', 'Dashboard', 'Chart', 'Table', 'Document', 'File', 'Sheet', 'Excel', 'Database']
-            exclude_words = action_verbs + common_words
+            # Look for proper names (capitalized words) in the query
+            proper_names = [word for word in query_words if word[0].isupper() and len(word) > 2]
             
-            proper_names = [word for word in query_words if word[0].isupper() and len(word) > 2 and word not in exclude_words]
-            
-            print(f"🔍 Debug - Proper names found in query: {proper_names}")
-            
-            # Check if previous response contains structured data (tables, lists)
-            has_table_data = any(indicator in last_response_lower for indicator in ['<table>', '<tr>', '<td>', '|', 'employee', 'name', 'id', 'certification', 'allocation'])
-            
-            print(f"🔍 Debug - Previous response contains table/structured data: {has_table_data}")
-            
-            # If we have proper names AND the previous response has structured data, treat as follow-up
-            if proper_names and has_table_data:
-                context_match = True
-                print(f"🔍 Debug - Query '{query}' appears to be asking for extraction from previous structured data")
-            elif proper_names and not has_table_data:
-                print(f"🔍 Debug - Found person names but no structured data in previous response")
-            else:
-                print(f"🔍 Debug - No person names found or no structured data to extract from")
-                
+            if proper_names:
+                # Check if any of the proper names appear in the last response
+                for name in proper_names:
+                    if name.lower() in last_response_lower:
+                        context_match = True
+                        print(f"🔍 Debug - Found '{name}' from query in previous response")
+                        break
         except Exception as e:
             print(f"🔍 Debug - Error checking context match: {e}")
             context_match = False
@@ -193,27 +181,24 @@ def process_follow_up_query(query, session_id="default"):
     genai.configure(api_key=api)
     model = genai.GenerativeModel('gemini-2.5-flash')
     
-    # Enhanced prompt for better information extraction from previous responses
+    # Enhanced prompt with specific name targeting
     prompt = f"""
     Previous conversation history (COMPLETE):
     {conversation_context}
     
     User's follow-up question: {query}
-    Target person/information: {target_name}
+    Target person: {target_name}
     
-    CRITICAL INSTRUCTIONS - THOROUGH SEARCH REQUIRED:
-    - The user is asking for information that should be present in the previous conversation history
-    - Sometimes important details get missed in large responses - look VERY CAREFULLY
-    - Search through EVERY part of the conversation history above
-    - The data might be in various formats: HTML tables, plain text, lists, or embedded within larger responses
-    - Look for the specific person/item mentioned: "{target_name}"
-    - Even if the information seems minor or was not highlighted before, extract it completely
-    - The information IS likely there - search thoroughly and don't give up easily
-    - Extract ALL available details: names, IDs, dates, status, certifications, allocations, contact info, etc.
-    - Present the information in a clear, well-formatted way
-    - If you find partial matches or similar names, include those too
+    INSTRUCTIONS:
+    - Search through the ENTIRE conversation history above for "{target_name}"
+    - The data might be in HTML table format or plain text
+    - Look carefully through all the data - the person might be listed anywhere in the response
+    - Extract ALL available information about this specific person
+    - If you find the person's information, provide it in a clear, formatted way
+    - Include all details available (Employee ID, certifications, dates, status, etc.)
+    - Focus specifically on: {target_name}
     
-    IMPORTANT: The user is specifically asking for this because they believe the information exists in the previous response. Search meticulously and extract everything related to "{target_name}".
+    Search the complete conversation history and extract all information about {target_name}.
     """
     
     try:

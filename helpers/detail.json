@@ -1,28 +1,42 @@
 {
-    "1": {
-        "foldername": "utilization",
-        "Detail": "This folder contains monthly utilization dashboard screenshots attached in an .dox file format."
-    },
-    "2" : {
-        "foldername" : "RRF",
-        "Detail": "This folder contains the monthly RRF (Resource Request Form) documents for resource allocation and management."
-    },
-    "3" : {
-         "foldername" : "Account Details",
-         "Detail" : "This folder contains the details of the each account such as count of employees, project details, allocation status, etc."
-    },
-    "4" : {
-        "foldername" : "Bench Report",
-        "Detail" : "This folder contains the details of bench employees including their skills, experience, and availability for new projects."
-    },
-    "5" : {
-        "foldername" : "GT's Allocation",
-        "Detail" : "This folder contains the allocation details of Graduate Trainee (GT) resources across various projects and accounts."
-    },
-    "6" : {
-        "foldername" : "Certifications",
-        "Detail" : "This folder contains the certification details of employees, including types of certifications, dates obtained, and certificate codes, etc."
+  "1": {
+    "foldername": "utilization",
+    "Detail": "This folder contains monthly utilization dashboard screenshots attached in an .dox file format."
+  },
+  "2": {
+    "foldername": "RRF",
+    "Detail": "This folder contains the monthly RRF (Resource Request Form) documents for resource allocation and management."
+  },
+  "3": {
+    "foldername": "Account Details",
+    "Detail": "This folder contains the details of the each account such as count of employees, project details, allocation status, etc.",
+    "sheets": {
+      "1": {
+        "sheetname": "Base",
+        "Detail": "This Sheet has all the details of the associates in each account ."
+      }
     }
-
+  },
+  "4": {
+    "foldername": "Bench Report",
+    "Detail": "This folder contains the details of bench employees including their skills, experience, and availability for new projects."
+  },
+  "5": {
+    "foldername": "GT's Allocation",
+    "Detail": "This folder contains the allocation details of Graduate Trainee (GT) resources across various projects and accounts.",
+    "sheets": {
+      "1": {
+        "sheetname": "GT's",
+        "Detail": "This Sheet has all the details of the GT's Allocation."
+      },
+      "2": {
+        "sheetname": "Allocation Data",
+        "Detail": "This Sheet has the count of GTs allocated to each account."
+      }
+    }
+  },
+  "6": {
+    "foldername": "Certification",
+    "Detail": "This folder contains the certification details of employees, including types of certifications, dates obtained, and certificate codes, etc."
+  }
 }
-
