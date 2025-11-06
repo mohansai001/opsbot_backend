@@ -5,3 +5,4 @@ google-generativeai
 requests
 uvicorn
 langchain_google_genai
+pandas
