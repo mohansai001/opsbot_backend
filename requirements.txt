@@ -18,12 +18,10 @@ filetype==1.2.0
 frozenlist==1.8.0
 fsspec==2025.9.0
 google-ai-generativelanguage==0.6.15
-google-api-core==2.26.0
-google-api-python-client==2.185.0
+google-api-core==2.17.0
 google-auth==2.41.1
-google-auth-httplib2==0.2.0
-langchain_google_genai
-googleapis-common-protos==1.71.0
+protobuf==4.25.3
+langchain-google-genai==3.0.0
 greenlet==3.2.4
 grpcio==1.76.0
 grpcio-status==1.71.2
