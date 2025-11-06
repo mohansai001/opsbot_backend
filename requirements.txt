@@ -16,6 +16,8 @@ langchain-google-genai
 langchain-classic
 langchain-text-splitters
 langsmith
+google-generativeai==0.8.3
+
 
 # --- Google API & gRPC (fixed dependencies) ---
 google-api-core[grpc]
