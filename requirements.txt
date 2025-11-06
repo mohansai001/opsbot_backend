@@ -9,3 +9,5 @@ pandas
 langchain
 langchain-core
 langchain-openai
+langchain-community
+sqlalchemy
